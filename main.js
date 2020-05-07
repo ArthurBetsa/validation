@@ -2,39 +2,46 @@
 
 const forbidden_paswords = ["1234", "12345", "654321", "qwerty", "password", "qazwsx"];
 let count = 0;
-let error = false;
 let err_message = "";
 document.addEventListener("DOMContentLoaded", () => {
 
-    const login = document.getElementById("login");
-    const password = document.getElementById("password");
+    let login = document.getElementById("login");
+    let password = document.getElementById("password");
 
     document.getElementById("confirm_button").addEventListener('click', (event) => { //confirm
         event.preventDefault();
-        if (count > 5) {
-            error = true;
+        if (count >= 5) {
             err_message = `Вы не смогли войти с 5-ти попыток! Доступ к сайту Заблокирован!`;
-            console.log(err_message);
+             console.log(err_message);
         }
-        else if(check_password(password.value, forbidden_paswords) || !error){
-            error = true;
-            err_message = `Пароль ${password.value} слишком слабый, выберите другой`;
-            console.log(err_message);
-            if (login.value === password.value) {
-                err_message ="Логин и пароль не должны совпадать";
-                console.log(err_message);
+        else {
+            if((login.value === "" || password.value === "")){
+                err_message ="Логин и пароль не должны быть пустыми";
+                  console.log(err_message);
             }
-        }
-    else{
-            console.log("Добро пожаловать");
-            count = 0;
+                else if (login.value === password.value) {
+                err_message ="Логин и пароль не должны совпадать";
+                  console.log(err_message);
+
+            }
+            else if(check_password(password.value, forbidden_paswords) ){
+                err_message = `Пароль ${password.value} слишком слабый, выберите другой`;
+                 console.log(err_message);
+
+            }
+            else{
+                console.log("Добро пожаловать");
+                count = 0;
+                login.value = "";
+                password.value = "";
+
+            }
         }
         console.log(count);
         count++;
 
-    });
-    count++;
 
+    });
 
 });
 
