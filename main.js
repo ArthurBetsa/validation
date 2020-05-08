@@ -6,6 +6,9 @@ const forbiddenPaswords = ["1234", "12345", "654321", "qwerty", "password", "qaz
 let count_Validation_Calls = 0;
 let count_Messages = 0;
 let message = "";
+
+// Random integer from min to max (max+1)
+
 // Create unique ID;
 const returnID = () => `f${(~~(Math.random() * 1e8)).toString(16)}`;
 
@@ -13,12 +16,15 @@ const returnID = () => `f${(~~(Math.random() * 1e8)).toString(16)}`;
 // Check is form contains forbidden password. | Get password.
 const isForbiddenPassword = (password) => forbiddenPaswords.includes(password);
 
+
 // Validation of login and password. |  Get value of login and password, return message.
 const form_Validation = (login, password) => {
 
     count_Validation_Calls++;
 
     if (count_Validation_Calls >= 5) {
+        login.disabled = 1;
+        password.disabled = 1;
         return message = `Вы не смогли войти с 5-ти попыток! Доступ к сайту Заблокирован!`;
     }
     if ((login.value === "" || password.value === "")) {
@@ -33,11 +39,10 @@ const form_Validation = (login, password) => {
         count_Validation_Calls = 0;
         login.value = "";
         password.value = "";
-        message = "Добро пожаловать";
+        return message = "Добро пожаловать";
     }
-
-    return message;
 };
+
 
 // Start work with page.
 document.addEventListener("DOMContentLoaded", () => {
@@ -46,15 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let login = document.getElementById("login");
     let password = document.getElementById("password");
 
+
     // Pop up data
     const pop_up_wrap = document.getElementById("pop_up_wrap");
-
 // Checking click of the form button.
     document.getElementById("confirm_button").addEventListener('click', confirm_Form);
 
 // Close pop-up message by click
     document.addEventListener("click", closeMessage);
 
+    return false;
 });
 
 
@@ -69,7 +75,7 @@ const confirm_Form = event => {
         pop_up_wrap.firstChild.remove();
         count_Messages--;
     }
-
+    return false;
 };
 
 //__________________________________________________________________________________
@@ -82,15 +88,13 @@ const confirm_Form = event => {
 ///////////////////  Start work with pop up messages.  /////////////////////////////
 
 // Close pop-up message by click
-const closeMessage = (event)=>{
+const closeMessage = (event) => {
     if (event.target.className === "pop_close") {
         event.target.offsetParent.remove();
         count_Messages--;
     }
+    return false;
 };
-
-
-
 
 
 class create_Pop_up_Message {
@@ -98,19 +102,24 @@ class create_Pop_up_Message {
         this.message = message;
         this.id = returnID();
         this.timer;
-        this.currentElementId;
+        this.messageId;
         this.opacity = 1;
     }
 
-    rendrer() { //render new prediction message
+    // Render new message
+    rendrer() {
+
         count_Messages++;
-        let pop_up_message = `<div class="message" id="${this.id}">
-                                <p>${this.message}</p>
-                                <div class="pop_close" ></div>
-                              </div>`;
+
+        let pop_up_message =
+            `<div class="message" id="${this.id}">`
+            + `<p>${this.message}</p>`
+            + `<div class="pop_close" ></div>`
+            + `</div>`
+
         pop_up_wrap.innerHTML += pop_up_message;
 
-        this.toFade();
+        // this.toFade();
 
         setTimeout(() => {
             this.delete_message()
@@ -120,27 +129,21 @@ class create_Pop_up_Message {
     // To reduce messages opacity color
     toFade() {
         this.timer = setInterval(() => {
-            this.currentElementId = document.getElementById(`${this.id}`);
-            if (this.currentElementId) {
-                this.currentElementId.style.backgroundColor = `rgba(131, 255, 64, ${this.opacity})`;
+            this.messageId = document.getElementById(`${this.id}`);
+            if (this.messageId) {
+                this.messageId.style.backgroundColor = `rgba(117, 228, 29, ${this.opacity})`;
                 this.opacity -= 0.016;
             }
         }, 100)
     }
 
-    delete_message() { //delete message
-        const close = this.currentElementId;
-        if (close) {
-            close.remove();
+    // Delete message
+    delete_message() {
+        if (this.messageId) {
+            this.messageId.remove();
             count_Messages--;
             clearTimeout(this.timer);
         }
     }
 }
 
-
-// let pop_up_message = `<div class="message" id="${this.id}">
-//                 <p>${predictionMessage[answers()]}</p>
-//                 <div class="pop_close" ></div>
-//             </div>`;
-// pop_up.innerHTML += pop_up_message;
