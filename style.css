@@ -18,7 +18,7 @@ body {
     align-self: center;
 
 }
-#pop-up {
+#pop_up_wrap {
 
     position: absolute;
     display: flex;
@@ -32,6 +32,8 @@ body {
     position: relative;
     display: flex;
     margin: 2px;
+    padding-left: 20px;
+    padding-right: 20px;
     border-radius: 50px;
     z-index: 1;
     height: 50px;
@@ -40,6 +42,9 @@ body {
     justify-content: center;
     align-items: center;
     animation: anim 5s;
+}
+.message>p{
+    text-align:center;
 }
 
 
